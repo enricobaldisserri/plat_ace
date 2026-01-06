@@ -6,15 +6,15 @@ import { Card } from "~/components/ui/Card";
 
 export default function ConfigDashboard() {
     const tables = [
-        { name: "Stati", sub: "stati di automazioni e iniziative", id: "AUTOMAZIONE_STATO", icon: <Settings />, href: "/config/stati" },
-        { name: "GIGAPR", sub: "anagrafica applicazioni", id: "GIGAPR", icon: <FileText />, href: "/config/gigapr" },
+        { name: "Gigapr", sub: "anagrafica applicazioni", id: "GIGAPR", icon: <FileText />, href: "/config/gigapr" },
         { name: "Istituti", sub: "aziende del gruppo", id: "ISTITUTO", icon: <Building2 />, href: "/config/istituti" },
-        { name: "Uffici", sub: "Unità organizzative", id: "UFFICIO", icon: <Users />, href: "/config/uffici" },
-        { name: "Tecnologie", sub: "tecnologie delle automazioni", id: "TECNOLOGIA_AUTOMAZIONI", icon: <Code2 />, href: "/config/tecnologie" },
         { name: "Procedure", sub: "elenco procedure operative", id: "PROCEDURA", icon: <FileText />, href: "/config/procedure" },
-        { name: "Servizi", sub: "elenco dei servizi centrali", id: "SERVIZIO", icon: <Network />, href: "/config/servizi" },
-        { name: "Utenti", sub: "gestione matricole, PO e DEV", id: "UTENTE", icon: <UserCog />, href: "/config/utenti" },
         { name: "Processi", sub: "mappatura albero dei processi", id: "ALBERO_DEI_PROCESSI", icon: <Share2 />, href: "/config/processi" },
+        { name: "Servizi", sub: "elenco dei servizi centrali", id: "SERVIZIO", icon: <Network />, href: "/config/servizi" },
+        { name: "Stati", sub: "stati di automazioni e iniziative", id: "AUTOMAZIONE_STATO", icon: <Settings />, href: "/config/stati" },
+        { name: "Tecnologie", sub: "tecnologie delle automazioni", id: "TECNOLOGIA_AUTOMAZIONI", icon: <Code2 />, href: "/config/tecnologie" },
+        { name: "Uffici", sub: "Unità organizzative", id: "UFFICIO", icon: <Users />, href: "/config/uffici" },
+        { name: "Utenti", sub: "gestione matricole, PO e DEV", id: "UTENTE", icon: <UserCog />, href: "/config/utenti" },
     ];
 
     return (

@@ -1,89 +1,165 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-
 model AutomazioneStato {
-  stato         String   @id @db.Char(12)
-  descrizione   String?  @db.VarChar(128)
+  stato         String        @id(map: "pk_automazione_stato") @db.Char(12)
+  descrizione   String?       @db.VarChar(128)
   ordine        Int?
-  in_produzione Boolean? @map("in_produzione")
+  in_produzione Boolean?      @map("in_produzione")
+  automazione   automazione[]
+  iniziativa    iniziativa[]
 
   @@map("automazione_stato")
 }
 
 model AlberoDeiProcessi {
-  cod_fase_processo String @id @map("cod_fase_processo") @db.VarChar(50)
+  cod_fase_processo String        @id(map: "pk_albero_dei_processi") @map("cod_fase_processo") @db.VarChar(50)
+  automazione       automazione[]
 
   @@map("albero_dei_processi")
 }
 
 model Gigapr {
-  codice_applicazione   String  @id @map("codice_applicazione") @db.Char(6)
-  uff_appl_responsabile String? @map("uff_appl_responsabile") @db.Char(10)
-  utente_responsabile   String? @map("utente_responsabile") @db.Char(10)
+  codice_applicazione                               String       @id(map: "pk_gigapr") @map("codice_applicazione") @db.Char(6)
+  uff_appl_responsabile                             String?      @map("uff_appl_responsabile") @db.Char(10)
+  utente_responsabile                               String?      @map("utente_responsabile") @db.Char(10)
+  iniziativa_iniziativa_codice_applicazioneTogigapr iniziativa[] @relation("iniziativa_codice_applicazioneTogigapr")
+  iniziativa_iniziativa_rif_gigaprTogigapr          iniziativa[] @relation("iniziativa_rif_gigaprTogigapr")
 
   @@map("gigapr")
 }
 
 model Istituto {
-  istituto    Int      @id
-  nome        String?  @db.VarChar(128)
-  flag_attivo Boolean? @map("flag_attivo")
+  istituto                             Int        @id(map: "pk_istituto")
+  nome                                 String?    @db.VarChar(128)
+  flag_attivo                          Boolean?   @map("flag_attivo")
+  servizio_servizio_istitutoToistituto Servizio[] @relation("servizio_istitutoToistituto")
 
   @@map("istituto")
 }
 
 model Procedura {
-  id_procedura String  @id @map("id_procedura") @db.Char(30)
-  descrizione  String? @db.VarChar(128)
+  id_procedura          String                  @id(map: "pk_procedura") @map("id_procedura") @db.Char(30)
+  descrizione           String?                 @db.VarChar(128)
+  procedura_automazione procedura_automazione[]
 
   @@map("procedura")
 }
 
 model Servizio {
-  servizio    String   @id @db.Char(10)
-  descrizione String?  @db.Char(10)
-  istituto    Int?
-  flag_attivo Boolean? @map("flag_attivo")
+  servizio                             String    @id(map: "pk_servizio") @db.Char(10)
+  descrizione                          String?   @db.Char(10)
+  istituto                             Int?
+  flag_attivo                          Boolean?  @map("flag_attivo")
+  istituto_servizio_istitutoToistituto Istituto? @relation("servizio_istitutoToistituto", fields: [istituto], references: [istituto], onDelete: NoAction, onUpdate: NoAction, map: "fk_servizio_istituto")
+  ufficio_ufficio_servizioToservizio   Ufficio[] @relation("ufficio_servizioToservizio")
 
   @@map("servizio")
 }
 
 model TecnologiaAutomazioni {
-  tipo_tecnologia String  @id @map("tipo_tecnologia") @db.Char(20)
-  descrizione     String? @db.VarChar(128)
-  flag_attivo     String? @map("flag_attivo") @db.Char(10)
+  tipo_tecnologia        String                   @id(map: "pk_tecnologia_automazioni") @map("tipo_tecnologia") @db.Char(20)
+  descrizione            String?                  @db.VarChar(128)
+  flag_attivo            String?                  @map("flag_attivo") @db.VarChar(10)
+  automazione_tecnologia automazione_tecnologia[]
 
   @@map("tecnologia_automazioni")
 }
 
 model Ufficio {
-  uo          String   @id @db.Char(10)
-  servizio    String?  @db.Char(10)
-  descrizione String?  @db.VarChar(128)
-  flag_attivo Boolean? @map("flag_attivo")
+  uo                                  String        @id(map: "pk_ufficio") @db.Char(10)
+  servizio                            String?       @db.Char(10)
+  descrizione                         String?       @db.VarChar(128)
+  flag_attivo                         Boolean?      @map("flag_attivo")
+  automazione                         automazione[]
+  servizio_ufficio_servizioToservizio Servizio?     @relation("ufficio_servizioToservizio", fields: [servizio], references: [servizio], onDelete: NoAction, onUpdate: NoAction, map: "fk_ufficio_servizio")
 
   @@map("ufficio")
 }
 
 model Utente {
-  matricola   String   @id @db.Char(10)
-  nome        String?  @db.VarChar(50)
-  cognome     String?  @db.VarChar(50)
-  email       String?  @db.VarChar(256)
-  flag_robot  Boolean? @map("flag_robot")
-  uo          String?  @db.Char(5)
-  flag_attivo Boolean? @map("flag_attivo")
+  matricola                                         String        @id(map: "pk_username") @db.Char(10)
+  nome                                              String?       @db.VarChar(50)
+  cognome                                           String?       @db.VarChar(50)
+  email                                             String?       @db.VarChar(256)
+  flag_robot                                        Boolean?      @map("flag_robot")
+  uo                                                String?       @db.Char(5)
+  flag_attivo                                       Boolean?      @map("flag_attivo")
+  automazione_automazione_rif_dev_matricolaToutente automazione[] @relation("automazione_rif_dev_matricolaToutente")
+  automazione_automazione_rif_po_matricolaToutente  automazione[] @relation("automazione_rif_po_matricolaToutente")
 
   @@map("utente")
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model automazione {
+  codice_automazione                           String                   @id(map: "pk_automazione") @db.Char(10)
+  nome_automazione                             String?                  @db.VarChar(128)
+  stato                                        String?                  @db.Char(12)
+  data_creazione                               DateTime?                @db.Date
+  rif_po_matricola                             String?                  @db.Char(10)
+  rif_dev_matricola                            String?                  @db.Char(10)
+  link_doc                                     String?                  @db.VarChar(256)
+  server                                       String?                  @db.Char(20)
+  note                                         String?
+  flag_attivo                                  Boolean?
+  data_running                                 DateTime?                @db.Date
+  data_dismissione                             DateTime?                @db.Date
+  matrice_rischio                              String?                  @db.Char(10)
+  cod_fase_processo                            String?                  @db.VarChar(50)
+  direco                                       Boolean?
+  uo                                           String?                  @db.Char(10)
+  codice_iniziativa                            String?                  @db.Char(10)
+  dati_patrimoniali                            Boolean?
+  albero_dei_processi                          AlberoDeiProcessi?       @relation(fields: [cod_fase_processo], references: [cod_fase_processo], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_albero_dei_processi")
+  automazione_stato                            AutomazioneStato?        @relation(fields: [stato], references: [stato], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_automazione_stato")
+  iniziativa                                   iniziativa?              @relation(fields: [codice_iniziativa], references: [codice_iniziativa], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_iniziativa")
+  ufficio                                      Ufficio?                 @relation(fields: [uo], references: [uo], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_ufficio")
+  utente_automazione_rif_dev_matricolaToutente Utente?                  @relation("automazione_rif_dev_matricolaToutente", fields: [rif_dev_matricola], references: [matricola], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_utente")
+  utente_automazione_rif_po_matricolaToutente  Utente?                  @relation("automazione_rif_po_matricolaToutente", fields: [rif_po_matricola], references: [matricola], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_utente_po")
+  automazione_tecnologia                       automazione_tecnologia[]
+  procedura_automazione                        procedura_automazione[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model automazione_tecnologia {
+  codice_automazione     String                @db.Char(10)
+  tipo_tecnologia        String                @db.Char(20)
+  principale             Boolean?
+  automazione            automazione           @relation(fields: [codice_automazione], references: [codice_automazione], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_tecnologia_automazione")
+  tecnologia_automazioni TecnologiaAutomazioni @relation(fields: [tipo_tecnologia], references: [tipo_tecnologia], onDelete: NoAction, onUpdate: NoAction, map: "fk_automazione_tecnologia_tecnologia_automazioni")
+
+  @@id([codice_automazione, tipo_tecnologia], map: "pk_automazione_tecnologia")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model iniziativa {
+  codice_iniziativa                             String            @id(map: "pk_processo") @db.Char(10)
+  nome_inziativa                                String?           @db.VarChar(128)
+  stato                                         String?           @db.Char(12)
+  data_creazione                                DateTime?         @db.Date
+  codice_applicazione                           String?           @db.Char(6)
+  rif_gigapr                                    String?           @db.Char(6)
+  flag_attivo                                   Boolean?
+  matrice_rischio                               String?           @db.Char(10)
+  automazione                                   automazione[]
+  automazione_stato                             AutomazioneStato? @relation(fields: [stato], references: [stato], onDelete: NoAction, onUpdate: NoAction, map: "fk_iniziativa_automazione_stato")
+  gigapr_iniziativa_codice_applicazioneTogigapr Gigapr?           @relation("iniziativa_codice_applicazioneTogigapr", fields: [codice_applicazione], references: [codice_applicazione], onDelete: NoAction, onUpdate: NoAction, map: "fk_iniziativa_gigapr")
+  gigapr_iniziativa_rif_gigaprTogigapr          Gigapr?           @relation("iniziativa_rif_gigaprTogigapr", fields: [rif_gigapr], references: [codice_applicazione], onDelete: NoAction, onUpdate: NoAction, map: "fk_iniziativa_gigapr1")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model procedura_automazione {
+  id_procedura       String      @db.Char(30)
+  codice_automazione String      @db.Char(10)
+  automazione        automazione @relation(fields: [codice_automazione], references: [codice_automazione], onDelete: NoAction, onUpdate: NoAction, map: "fk_procedura_automazione_automazione")
+  procedura          Procedura   @relation(fields: [id_procedura], references: [id_procedura], onDelete: NoAction, onUpdate: NoAction, map: "fk_procedura_automazione_procedura")
+
+  @@id([id_procedura, codice_automazione], map: "pk_procedura_automazione")
+}

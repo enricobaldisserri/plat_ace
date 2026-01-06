@@ -65,15 +65,15 @@ export function Sidebar() {
                 {/* Sub-items for Config, visible if we are in config section */}
                 {pathname?.startsWith('/config') && (
                     <div className="ml-9 space-y-1 border-l-2 border-slate-100 dark:border-slate-800 pl-3 my-1">
-                        <Link href="/config/stati" className={`block text-sm font-medium transition-colors ${pathname === '/config/stati' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Stati</Link>
-                        <Link href="/config/gigapr" className={`block text-sm font-medium transition-colors ${pathname === '/config/gigapr' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>GIGAPR</Link>
+                        <Link href="/config/gigapr" className={`block text-sm font-medium transition-colors ${pathname === '/config/gigapr' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Gigapr</Link>
                         <Link href="/config/istituti" className={`block text-sm font-medium transition-colors ${pathname === '/config/istituti' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Istituti</Link>
-                        <Link href="/config/uffici" className={`block text-sm font-medium transition-colors ${pathname === '/config/uffici' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Uffici</Link>
-                        <Link href="/config/tecnologie" className={`block text-sm font-medium transition-colors ${pathname === '/config/tecnologie' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Tecnologie</Link>
                         <Link href="/config/procedure" className={`block text-sm font-medium transition-colors ${pathname === '/config/procedure' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Procedure</Link>
-                        <Link href="/config/servizi" className={`block text-sm font-medium transition-colors ${pathname === '/config/servizi' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Servizi</Link>
-                        <Link href="/config/utenti" className={`block text-sm font-medium transition-colors ${pathname === '/config/utenti' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Utenti</Link>
                         <Link href="/config/processi" className={`block text-sm font-medium transition-colors ${pathname === '/config/processi' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Processi</Link>
+                        <Link href="/config/servizi" className={`block text-sm font-medium transition-colors ${pathname === '/config/servizi' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Servizi</Link>
+                        <Link href="/config/stati" className={`block text-sm font-medium transition-colors ${pathname === '/config/stati' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Stati</Link>
+                        <Link href="/config/tecnologie" className={`block text-sm font-medium transition-colors ${pathname === '/config/tecnologie' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Tecnologie</Link>
+                        <Link href="/config/uffici" className={`block text-sm font-medium transition-colors ${pathname === '/config/uffici' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Uffici</Link>
+                        <Link href="/config/utenti" className={`block text-sm font-medium transition-colors ${pathname === '/config/utenti' ? 'text-indigo-600' : 'text-slate-500 hover:text-indigo-600'}`}>Utenti</Link>
                     </div>
                 )}
             </nav>

@@ -19,15 +19,22 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { tipo_tecnologia, descrizione, flag_attivo } = body;
 
+        if (!tipo_tecnologia) {
+            return NextResponse.json({ error: "Tipo Tecnologia is required" }, { status: 400 });
+        }
+
         const newItem = await db.tecnologiaAutomazioni.create({
             data: {
                 tipo_tecnologia,
                 descrizione,
-                flag_attivo, // String(10) in DB as per SQL, likely 'true'/'false' or 'S'/'N' or just string
+                flag_attivo: flag_attivo // Should be passed as "S" or "N" from frontend
             },
         });
         return NextResponse.json(newItem, { status: 201 });
-    } catch (error) {
+    } catch (error: any) {
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: "Tecnologia already exists" }, { status: 409 });
+        }
         return NextResponse.json({ error: "Failed to create tecnologia" }, { status: 500 });
     }
 }

@@ -28,13 +28,13 @@ export function TecnologiaModal({ isOpen, onClose, onSave, initialData }: Tecnol
             setFormData({
                 tipo_tecnologia: initialData.tipo_tecnologia,
                 descrizione: initialData.descrizione ?? "",
-                flag_attivo: initialData.flag_attivo ?? "",
+                flag_attivo: initialData.flag_attivo ?? "S",
             });
         } else {
             setFormData({
                 tipo_tecnologia: "",
                 descrizione: "",
-                flag_attivo: "",
+                flag_attivo: "S",
             });
         }
     }, [initialData, isOpen]);
@@ -106,15 +106,15 @@ export function TecnologiaModal({ isOpen, onClose, onSave, initialData }: Tecnol
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase text-slate-500 tracking-tight">Status (Flag Attivo)</label>
-                        <input
-                            type="text"
-                            maxLength={10}
-                            value={formData.flag_attivo}
-                            onChange={e => setFormData({ ...formData, flag_attivo: e.target.value })}
-                            className="w-full p-2.5 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-sm"
-                            placeholder="e.g. S, N, true, false"
-                        />
+                        <label className="flex items-center gap-2 cursor-pointer mt-4">
+                            <input
+                                type="checkbox"
+                                checked={formData.flag_attivo === "S"}
+                                onChange={e => setFormData({ ...formData, flag_attivo: e.target.checked ? "S" : "N" })}
+                                className="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Attivo</span>
+                        </label>
                     </div>
                 </form>
 

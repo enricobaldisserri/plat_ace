@@ -19,14 +19,21 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { id_procedura, descrizione } = body;
 
+        if (!id_procedura) {
+            return NextResponse.json({ error: "ID Procedura is required" }, { status: 400 });
+        }
+
         const newItem = await db.procedura.create({
             data: {
                 id_procedura,
-                descrizione,
+                descrizione
             },
         });
         return NextResponse.json(newItem, { status: 201 });
-    } catch (error) {
+    } catch (error: any) {
+        if (error.code === 'P2002') {
+            return NextResponse.json({ error: "Procedura already exists" }, { status: 409 });
+        }
         return NextResponse.json({ error: "Failed to create procedura" }, { status: 500 });
     }
 }

@@ -46,9 +46,9 @@ export function GigaprManager() {
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                        <FileText className="text-indigo-600" /> Gestione GIGAPR
+                        <FileText className="text-indigo-600" /> Gestione gigapr
                     </h1>
-                    <p className="text-slate-500">Anagrafica applicazioni GIGAPR.</p>
+                    <p className="text-slate-500">Anagrafica applicazioni gigapr.</p>
                 </div>
                 <button onClick={() => { setEditingItem(null); setModalOpen(true); }} className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 shadow-sm transition-all flex items-center gap-2">
                     <Plus size={18} /> Nuovo Record

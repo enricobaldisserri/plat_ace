@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+
+model AutomazioneStato {
+  stato         String   @id @db.Char(12)
+  descrizione   String?  @db.VarChar(128)
+  ordine        Int?
+  in_produzione Boolean? @map("in_produzione")
+
+  @@map("automazione_stato")
+}
+
+model AlberoDeiProcessi {
+  cod_fase_processo String @id @map("cod_fase_processo") @db.VarChar(50)
+
+  @@map("albero_dei_processi")
+}
+
+model Gigapr {
+  codice_applicazione   String  @id @map("codice_applicazione") @db.Char(6)
+  uff_appl_responsabile String? @map("uff_appl_responsabile") @db.Char(10)
+  utente_responsabile   String? @map("utente_responsabile") @db.Char(10)
+
+  @@map("gigapr")
+}
+
+model Istituto {
+  istituto    Int      @id
+  nome        String?  @db.VarChar(128)
+  flag_attivo Boolean? @map("flag_attivo")
+
+  @@map("istituto")
+}
+
+model Procedura {
+  id_procedura String  @id @map("id_procedura") @db.Char(30)
+  descrizione  String? @db.VarChar(128)
+
+  @@map("procedura")
+}
+
+model Servizio {
+  servizio    String   @id @db.Char(10)
+  descrizione String?  @db.Char(10)
+  istituto    Int?
+  flag_attivo Boolean? @map("flag_attivo")
+
+  @@map("servizio")
+}
+
+model TecnologiaAutomazioni {
+  tipo_tecnologia String  @id @map("tipo_tecnologia") @db.Char(20)
+  descrizione     String? @db.VarChar(128)
+  flag_attivo     String? @map("flag_attivo") @db.Char(10)
+
+  @@map("tecnologia_automazioni")
+}
+
+model Ufficio {
+  uo          String   @id @db.Char(10)
+  servizio    String?  @db.Char(10)
+  descrizione String?  @db.VarChar(128)
+  flag_attivo Boolean? @map("flag_attivo")
+
+  @@map("ufficio")
+}
+
+model Utente {
+  matricola   String   @id @db.Char(10)
+  nome        String?  @db.VarChar(50)
+  cognome     String?  @db.VarChar(50)
+  email       String?  @db.VarChar(256)
+  flag_robot  Boolean? @map("flag_robot")
+  uo          String?  @db.Char(5)
+  flag_attivo Boolean? @map("flag_attivo")
+
+  @@map("utente")
+}
+

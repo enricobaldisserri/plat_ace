@@ -1,0 +1,145 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { Card } from "~/components/ui/Card";
+
+type UfficioModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    onSave: () => void;
+    initialData?: {
+        uo: string;
+        servizio?: string | null;
+        descrizione?: string | null;
+        flag_attivo?: boolean | null;
+    } | null;
+};
+
+export function UfficioModal({ isOpen, onClose, onSave, initialData }: UfficioModalProps) {
+    const [formData, setFormData] = useState({
+        uo: "",
+        servizio: "",
+        descrizione: "",
+        flag_attivo: true,
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                uo: initialData.uo,
+                servizio: initialData.servizio ?? "",
+                descrizione: initialData.descrizione ?? "",
+                flag_attivo: initialData.flag_attivo ?? true,
+            });
+        } else {
+            setFormData({
+                uo: "",
+                servizio: "",
+                descrizione: "",
+                flag_attivo: true,
+            });
+        }
+    }, [initialData, isOpen]);
+
+    if (!isOpen) return null;
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+
+        try {
+            const url = initialData ? `/api/uffici/${initialData.uo}` : "/api/uffici";
+            const method = initialData ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || "Failed to save");
+            }
+
+            onSave();
+            onClose();
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <Card className="w-full max-w-lg overflow-hidden flex flex-col shadow-2xl">
+                <div className="p-6 border-b dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900">
+                    <h2 className="text-xl font-bold">{initialData ? "Modifica Ufficio" : "Nuovo Ufficio"}</h2>
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-2xl transition-colors">&times;</button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5 bg-slate-50/50 dark:bg-slate-950/50">
+                    {error && <div className="p-3 bg-red-100 text-red-800 rounded-lg text-sm">{error}</div>}
+
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold uppercase text-slate-500 tracking-tight">UO (Codice)</label>
+                        <input
+                            type="text"
+                            maxLength={10}
+                            required
+                            disabled={!!initialData}
+                            value={formData.uo}
+                            onChange={e => setFormData({ ...formData, uo: e.target.value })}
+                            className="w-full p-2.5 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-sm disabled:opacity-50"
+                        />
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold uppercase text-slate-500 tracking-tight">Servizio</label>
+                        <input
+                            type="text"
+                            maxLength={10}
+                            value={formData.servizio}
+                            onChange={e => setFormData({ ...formData, servizio: e.target.value })}
+                            className="w-full p-2.5 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-sm"
+                        />
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold uppercase text-slate-500 tracking-tight">Descrizione</label>
+                        <input
+                            type="text"
+                            maxLength={128}
+                            value={formData.descrizione}
+                            onChange={e => setFormData({ ...formData, descrizione: e.target.value })}
+                            className="w-full p-2.5 bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-lg shadow-sm"
+                        />
+                    </div>
+
+                    <div className="space-y-1.5 pt-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={formData.flag_attivo}
+                                onChange={e => setFormData({ ...formData, flag_attivo: e.target.checked })}
+                                className="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Attivo</span>
+                        </label>
+                    </div>
+                </form>
+
+                <div className="p-6 border-t dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-end gap-3">
+                    <button onClick={onClose} type="button" className="px-5 py-2 text-sm font-bold border dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Annulla</button>
+                    <button onClick={handleSubmit} disabled={loading} className="px-5 py-2 text-sm font-bold bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md transition-all disabled:opacity-70">
+                        {loading ? "Salvataggio..." : "Salva"}
+                    </button>
+                </div>
+            </Card>
+        </div>
+    );
+}
